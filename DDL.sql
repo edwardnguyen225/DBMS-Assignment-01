@@ -2,7 +2,9 @@ DROP SCHEMA IF EXISTS Learning_Teaching;
 
 CREATE SCHEMA Learning_Teaching;
 
-CREATE TABLE Learning_Teaching.MemberOfEducationUnit(
+USE Learning_Teaching;
+
+CREATE TABLE MemberOfEducationUnit(
     ID CHAR(9),
     Gender CHAR,
     Fname VARCHAR(15) NOT NULL,
@@ -12,14 +14,14 @@ CREATE TABLE Learning_Teaching.MemberOfEducationUnit(
     PRIMARY KEY (ID)
 );
 
-CREATE TABLE Learning_Teaching.Employee(
+CREATE TABLE Employee(
     EmployeeID CHAR(6),
     PersonalEID CHAR(9) UNIQUE NOT NULL,
     PRIMARY KEY (EmployeeID),
     FOREIGN KEY (PersonalEID) REFERENCES MemberOfEducationUnit(ID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.Student(
+CREATE TABLE Student(
     StudentID CHAR(7),
     YearofAdmission YEAR NOT NULL,
     PersonalSID CHAR(9) UNIQUE NOT NULL,
@@ -27,30 +29,30 @@ CREATE TABLE Learning_Teaching.Student(
     FOREIGN KEY (PersonalSID) REFERENCES MemberOfEducationUnit(ID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.AAOEmployee(
+CREATE TABLE AAOEmployee(
     AEID CHAR(6),
     PRIMARY KEY (AEID),
     FOREIGN KEY (AEID) REFERENCES Employee(EmployeeID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.SeniorLecturer(
+CREATE TABLE SeniorLecturer(
     SLID CHAR(6),
     PRIMARY KEY (SLID),
     FOREIGN KEY (SLID) REFERENCES Employee(EmployeeID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.Lecturer(
+CREATE TABLE Lecturer(
     LID CHAR(6),
     PRIMARY KEY (LID),
     FOREIGN KEY (LID) REFERENCES Employee(EmployeeID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.Faculty(
+CREATE TABLE Faculty(
     FacultyName VARCHAR(70),
     PRIMARY KEY (FacultyName)
 );
 
-CREATE TABLE Learning_Teaching.`Subject`(
+CREATE TABLE `Subject`(
     CID CHAR(6),
     CName VARCHAR(50) NOT NULL,
     STATUS BOOLEAN,
@@ -62,25 +64,25 @@ CREATE TABLE Learning_Teaching.`Subject`(
     )
 );
 
-CREATE TABLE Learning_Teaching.Textbook(
+CREATE TABLE Textbook(
     ISBN CHAR(7),
     TName VARCHAR(50) NOT NULL,
     PRIMARY KEY (ISBN)
 );
 
-CREATE TABLE Learning_Teaching.Author(
+CREATE TABLE Author(
     AID CHAR(7),
     AName VARCHAR(50) NOT NULL,
     PRIMARY KEY (AID)
 );
 
-CREATE TABLE Learning_Teaching.Publisher(
+CREATE TABLE Publisher(
     PName VARCHAR(50),
     Location VARCHAR(80),
     PRIMARY KEY (PName)
 );
 
-CREATE TABLE Learning_Teaching.Class(
+CREATE TABLE Class(
     `Year` YEAR,
     Semester CHAR(3),
     CCID CHAR(6),
@@ -88,7 +90,7 @@ CREATE TABLE Learning_Teaching.Class(
     FOREIGN KEY (CCID) REFERENCES Subject(CID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.SubClass(
+CREATE TABLE SubClass(
     CYear YEAR,
     CSemester CHAR(3),
     SCID CHAR(6),
@@ -97,7 +99,7 @@ CREATE TABLE Learning_Teaching.SubClass(
     FOREIGN KEY (CYear, CSemester, SCID) REFERENCES Class(`Year`, Semester, CCID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.`Week`(
+CREATE TABLE `Week`(
     WYear YEAR,
     WSemester CHAR(3),
     WCID CHAR(6),
@@ -107,7 +109,7 @@ CREATE TABLE Learning_Teaching.`Week`(
     FOREIGN KEY (WYear, WSemester, WCID, WSID) REFERENCES SubClass(CYear, CSemester, SCID, SID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.`Use`(
+CREATE TABLE `Use`(
     UCID CHAR(6),
     UISBN CHAR(7),
     PRIMARY KEY (UCID, UISBN),
@@ -115,7 +117,7 @@ CREATE TABLE Learning_Teaching.`Use`(
     FOREIGN KEY (UISBN) REFERENCES Textbook(ISBN) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.MainlyUse(
+CREATE TABLE MainlyUse(
     MCID CHAR(6),
     MISBD CHAR(7),
     PRIMARY KEY (MCID, MISBD),
@@ -123,7 +125,7 @@ CREATE TABLE Learning_Teaching.MainlyUse(
     FOREIGN KEY (MISBD) REFERENCES Textbook(ISBN) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.Prerequisite(
+CREATE TABLE Prerequisite(
     Csuper CHAR(6),
     Csub CHAR(6),
     PRIMARY KEY (Csuper, Csub),
@@ -131,7 +133,7 @@ CREATE TABLE Learning_Teaching.Prerequisite(
     FOREIGN KEY (Csub) REFERENCES `Subject`(CID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.Parallel(
+CREATE TABLE Parallel(
     Psuper CHAR(6),
     Psub CHAR(6),
     PRIMARY KEY (Psuper, Psub),
@@ -139,7 +141,7 @@ CREATE TABLE Learning_Teaching.Parallel(
     FOREIGN KEY (Psub) REFERENCES `Subject`(CID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.Attend(
+CREATE TABLE Attend(
     AYear YEAR,
     ASemester CHAR(3),
     ACID CHAR(6),
@@ -150,7 +152,7 @@ CREATE TABLE Learning_Teaching.Attend(
     FOREIGN KEY (AYear, ASemester, ACID, ASID) REFERENCES SubClass(CYear, CSemester, SCID, SID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.Manage(
+CREATE TABLE Manage(
     MLID CHAR(6),
     MYear YEAR,
     MSemester CHAR(3),
@@ -162,7 +164,7 @@ CREATE TABLE Learning_Teaching.Manage(
     FOREIGN KEY (MISBN) REFERENCES Textbook(ISBN) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.Written_by(
+CREATE TABLE Written_by(
     WISBN CHAR(7),
     WAID CHAR(7),
     PRIMARY KEY (WISBN, WAID),
@@ -171,83 +173,83 @@ CREATE TABLE Learning_Teaching.Written_by(
 );
 
 ALTER TABLE
-    Learning_Teaching.Employee
+    Employee
 ADD
     (FEName VARCHAR(70) NOT NULL);
 
 ALTER TABLE
-    Learning_Teaching.Employee
+    Employee
 ADD
     FOREIGN KEY (FEName) REFERENCES Faculty(FacultyName) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE
-    Learning_Teaching.Student
+    Student
 ADD
     (FSName VARCHAR(70));
 
 ALTER TABLE
-    Learning_Teaching.Student
+    Student
 ADD
     FOREIGN KEY (FSName) REFERENCES Faculty(FacultyName) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE
-    Learning_Teaching.`Subject`
+    `Subject`
 ADD
     (FCName VARCHAR(70) NOT NULL);
 
 ALTER TABLE
-    Learning_Teaching.`Subject`
+    `Subject`
 ADD
     FOREIGN KEY (FCName) REFERENCES Faculty(FacultyName) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE
-    Learning_Teaching.SubClass
+    SubClass
 ADD
     (SCLID CHAR(6) NOT NULL);
 
 ALTER TABLE
-    Learning_Teaching.SubClass
+    SubClass
 ADD
     FOREIGN KEY (SCLID) REFERENCES Lecturer(LID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE
-    Learning_Teaching.`Week`
+    `Week`
 ADD
     (WLID CHAR(6));
 
 ALTER TABLE
-    Learning_Teaching.`Week`
+    `Week`
 ADD
     FOREIGN KEY (WLID) REFERENCES Lecturer(LID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE
-    Learning_Teaching.Lecturer
+    Lecturer
 ADD
     (LSLID CHAR(6));
 
 ALTER TABLE
-    Learning_Teaching.Lecturer
+    Lecturer
 ADD
     FOREIGN KEY (LSLID) REFERENCES SeniorLecturer(SLID) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE
-    Learning_Teaching.Textbook
+    Textbook
 ADD
     (TPName CHAR(50) NOT NULL);
 
 ALTER TABLE
-    Learning_Teaching.Textbook
+    Textbook
 ADD
     FOREIGN KEY (TPName) REFERENCES Publisher(Pname) ON DELETE CASCADE ON UPDATE CASCADE;
 
-CREATE TABLE Learning_Teaching.Phone(
+CREATE TABLE Phone(
     MOEID CHAR(9),
     PhoneNumber CHAR(11),
     PRIMARY KEY (MOEID, PhoneNumber),
     FOREIGN KEY (MOEID) REFERENCES MemberOfEducationUnit(ID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.`Status`(
+CREATE TABLE `Status`(
     SSID CHAR(7),
     SemesterStatus CHAR(3),
     LearningStatus INT,
@@ -259,14 +261,14 @@ CREATE TABLE Learning_Teaching.`Status`(
     )
 );
 
-CREATE TABLE Learning_Teaching.Category(
+CREATE TABLE Category(
     CISBN CHAR(7),
     CategoryName VARCHAR(15),
     PRIMARY KEY (CISBN, CategoryName),
     FOREIGN KEY (CISBN) REFERENCES Textbook(ISBN) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE Learning_Teaching.PublishingYear(
+CREATE TABLE PublishingYear(
     PYISBN CHAR(7),
     PYear YEAR,
     PRIMARY KEY (PYISBN, PYear),
