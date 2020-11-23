@@ -1,1 +1,1 @@
-# BDMS-Assignment-01
+# DBMS-Assignment-01
