@@ -1,4 +1,4 @@
-DROP SCHEMA Learning_Teaching;
+DROP SCHEMA IF EXISTS Learning_Teaching;
 
 CREATE SCHEMA Learning_Teaching;
 
